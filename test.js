@@ -1,8 +1,3 @@
-# NJSGenX 
-### A very simple function generator for NJS
-
-#### Basic Example Output
-```javascript
 const debug = true;
 
 function router(r) {
@@ -25,4 +20,3 @@ function router(r) {
     return "127.0.0.1:80";
 }
 export default {router};
-```
