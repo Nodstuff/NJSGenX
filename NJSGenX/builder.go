@@ -2,6 +2,7 @@ package NJSGenX
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -98,9 +99,10 @@ func NewBlock() Block {
 }
 
 func (b Block) WithRegexMatch(arg, rgx string) Block {
+	valRgx := regexp.MustCompile(rgx)
 	b.regex = true
 	b.args = conditionalArgs{arg1: arg}
-	b.predicate = ".match(\"" + rgx + "\")"
+	b.predicate = ".match(\"" + valRgx.String() + "\")"
 	return b
 }
 
