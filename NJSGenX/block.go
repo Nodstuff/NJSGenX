@@ -61,6 +61,12 @@ func (b Block) WithMatchQueryParam(param string) Block {
 		WithOperator("===")
 }
 
+func (b Block) WithMatchHeaderValue(key, value string) Block {
+	return b.WithConditional("if").
+		WithArgs(fmt.Sprintf("r.headersIn['%s']", key), fmt.Sprintf("\"%s\"", value)).
+		WithOperator("===")
+}
+
 func (b Block) WithConditional(c string) Block {
 	b.conditional = c
 	return b

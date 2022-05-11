@@ -25,11 +25,16 @@ func main() {
 		WithBodyReturning("\"127.0.0.1:8090\"").
 		WithElseReturning("\"127.0.0.1:8091\"")
 
+	e := NJSGenX.NewBlock().
+		WithMatchHeaderValue("key", "value").
+		WithBodyReturning("\"127.0.0.1:8090\"").
+		WithElseReturning("\"127.0.0.1:8091\"")
+
 	fn, err := NJSGenX.NewFunction("router").
 		WithParameters("r").
 		WithReturn("\"127.0.0.1:80\"").
-		WithBlocks(a, b, c, d).
-		WithDebug().
+		WithBlocks(a, b, c, d, e).
+		//WithDebug().
 		WriteToFile("test.js")
 
 	if err != nil {
