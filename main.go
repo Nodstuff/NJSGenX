@@ -7,28 +7,21 @@ import (
 
 func main() {
 	a := NJSGenX.NewBlock().
-		WithConditional("if").
-		WithRegexMatch("r.uri", "/api/v1/test/\\w+").
+		WithURIRegexMatch("/api/v1/test/\\w+").
 		WithBodyReturning("\"127.0.0.1:8082\"")
 
 	b := NJSGenX.NewBlock().
-		WithConditional("if").
-		WithOperator("===").
-		WithArgs("r.method", "\"PUT\"").
+		WithMatchRequestMethod(NJSGenX.MethodPut).
 		WithBodyReturning("\"127.0.0.1:8085\"").
 		WithElseReturning("\"127.0.0.1:8086\"")
 
 	c := NJSGenX.NewBlock().
-		WithConditional("if").
-		WithOperator("===").
-		WithArgs("r.method", "\"DELETE\"").
+		WithMatchRequestMethod(NJSGenX.MethodDelete).
 		WithBodyReturning("\"127.0.0.1:8090\"").
 		WithElseReturning("\"127.0.0.1:8091\"")
 
 	d := NJSGenX.NewBlock().
-		WithConditional("if").
-		WithQueryParams("r.args.env", "\"test\"").
-		WithOperator("===").
+		WithMatchQueryParam("test").
 		WithBodyReturning("\"127.0.0.1:8090\"").
 		WithElseReturning("\"127.0.0.1:8091\"")
 

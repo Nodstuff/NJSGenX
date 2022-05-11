@@ -12,7 +12,7 @@ const (
 	signatureString = "function %s(%s) {\n"
 	nestedString    = "%s%s (%s%s%s) {\n%s%s;\n%s}"
 	queryString     = "%s%s (decodeURIComponent(%s)%s%s) {\n%s%s;\n%s}"
-	debugLogs       = "debug && r.log(%s)"
+	debugLogs       = "debug && r.log(%s);\n"
 )
 
 func (f Function) Build() string {
@@ -49,14 +49,14 @@ func buildNestedBlocks(bldr *strings.Builder, blks []Block, debug bool) {
 			bldr.WriteString(fmt.Sprintf(nestedString, space, b.conditional, b.args.arg1, b.operator, b.args.arg2, doubleSpace, b.body, space))
 		}
 		if b.withElse || debug {
-			bldr.WriteString(" else { ")
+			bldr.WriteString(" else { \n")
 			if debug {
-				bldr.WriteString(fmt.Sprintf(debugLogs, b.args.arg1))
-				if b.withElse {
-					bldr.WriteString("; ")
-				}
+				bldr.WriteString(fmt.Sprintf(doubleSpace+debugLogs, b.args.arg1))
 			}
-			bldr.WriteString(fmt.Sprintf("%s; }\n\n", b.elseBody))
+			if b.elseBody != "" {
+				bldr.WriteString(fmt.Sprintf("%s%s;\n", doubleSpace, b.elseBody))
+			}
+			bldr.WriteString(fmt.Sprintf("%s}\n\n", space))
 		} else {
 			bldr.WriteString("\n\n")
 		}

@@ -1,6 +1,24 @@
 package NJSGenX
 
-import "regexp"
+import (
+	"fmt"
+	"net/http"
+	"regexp"
+)
+
+type RequestMethod string
+
+const (
+	MethodGet     RequestMethod = http.MethodGet
+	MethodHead    RequestMethod = http.MethodHead
+	MethodPost    RequestMethod = http.MethodPost
+	MethodPut     RequestMethod = http.MethodPut
+	MethodPatch   RequestMethod = http.MethodPatch
+	MethodDelete  RequestMethod = http.MethodDelete
+	MethodConnect RequestMethod = http.MethodConnect
+	MethodOptions RequestMethod = http.MethodOptions
+	MethodTrace   RequestMethod = http.MethodTrace
+)
 
 type Block struct {
 	conditional string
@@ -22,12 +40,25 @@ func NewBlock() Block {
 	return Block{}
 }
 
-func (b Block) WithRegexMatch(arg, rgx string) Block {
+func (b Block) WithURIRegexMatch(rgx string) Block {
 	valRgx := regexp.MustCompile(rgx)
 	b.regex = true
-	b.args = conditionalArgs{arg1: arg}
+	b.conditional = "if"
+	b.args = conditionalArgs{arg1: "r.uri"}
 	b.operator = ".match(\"" + valRgx.String() + "\")"
 	return b
+}
+
+func (b Block) WithMatchRequestMethod(method RequestMethod) Block {
+	return b.WithConditional("if").
+		WithOperator("===").
+		WithArgs("r.method", fmt.Sprintf("\"%s\"", method))
+}
+
+func (b Block) WithMatchQueryParam(param string) Block {
+	return b.WithConditional("if").
+		WithQueryParams("r.args.env", fmt.Sprintf("\"%s\"", param)).
+		WithOperator("===")
 }
 
 func (b Block) WithConditional(c string) Block {
