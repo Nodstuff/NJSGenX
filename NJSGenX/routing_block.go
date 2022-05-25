@@ -10,6 +10,9 @@ import (
 type RequestMethod string
 
 const (
+	nestedString = "%s%s (%s%s%s) {\n%s%s\n"
+	queryString  = "%s%s (decodeURIComponent(%s)%s%s) {\n%s%s\n%s}"
+
 	MethodGet     RequestMethod = http.MethodGet
 	MethodHead    RequestMethod = http.MethodHead
 	MethodPost    RequestMethod = http.MethodPost

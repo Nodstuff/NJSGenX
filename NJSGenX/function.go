@@ -11,8 +11,6 @@ const (
 	doubleSpace     = space + space
 	tripleSpace     = doubleSpace + space
 	signatureString = "function %s(%s) {\n"
-	nestedString    = "%s%s (%s%s%s) {\n%s%s\n"
-	queryString     = "%s%s (decodeURIComponent(%s)%s%s) {\n%s%s\n%s}"
 	debugLogs       = "debug && r.log(%s);\n"
 )
 

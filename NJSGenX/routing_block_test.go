@@ -149,6 +149,31 @@ func TestBlockBuilder(t *testing.T) {
 				"        return \"10.0.0.5:8080\"\n    }",
 			true,
 		},
+		{
+			"Test Regex match with sub-routes with body return",
+			NewRoutingBlock().
+				WithURIRegexMatch("/\\/api\\/v1\\/test\\/\\d+/").
+				WithSubRoutes("\"/api/v1/\"",
+					NewRoutingBlock().
+						WithURIRegexMatch("test/\\w+").
+						WithBodyReturning("\"10.0.0.1\""),
+					NewRoutingBlock().
+						WithURIRegexMatch("test2/\\d+").
+						WithBodyReturning("\"10.0.0.2\""),
+					NewRoutingBlock().
+						WithURIRegexMatch("test3/\\d+").
+						WithBodyReturning("\"10.0.0.3\""),
+				),
+			"if (r.uri===\"/api/v1/\") {\n" +
+				"        \n        if (r.uri.match(\"test/\\w+\")) {\n" +
+				"            return \"10.0.0.1\";\n        }\n" +
+				"        if (r.uri.match(\"test2/\\d+\")) {\n" +
+				"            return \"10.0.0.2\";\n        }\n" +
+				"        if (r.uri.match(\"test3/\\d+\")) {\n" +
+				"            return \"10.0.0.3\";\n        }\n" +
+				"    } else { \n        debug && r.log(r.uri);\n    }",
+			true,
+		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
